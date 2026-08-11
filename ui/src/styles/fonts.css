@@ -1,0 +1,34 @@
+@font-face {
+  font-family: 'RDRLino-Regular';
+  src: url('../assets/fonts/RDRLino-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hapna-Regular';
+  src: url('../assets/fonts/Hapna-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'western-bang-bang';
+  src: url('../assets/fonts/western-bang-bang.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Flottenheimer DEMO';
+  src: url('../assets/fonts/flottenheimerDEMO.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Segoe Script';
+  src: local('Segoe Script');
+  font-weight: normal;
+  font-style: normal;
+}

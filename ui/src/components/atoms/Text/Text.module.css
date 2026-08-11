@@ -1,0 +1,21 @@
+.text {
+    width: 100%;
+    font-family: 'Hapna-Regular', Arial, sans-serif;
+    color: #ffffff;
+    text-align: left;
+}
+
+.small {
+    font-size: 14px;
+    line-height: 18px;
+}
+
+.medium {
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.large {
+    font-size: 24px;
+    line-height: 28px;
+}

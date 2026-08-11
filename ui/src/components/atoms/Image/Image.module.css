@@ -1,0 +1,15 @@
+.image {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+    /* center horizontally */
+    object-fit: cover;
+    /* fill width while respecting defined height */
+    object-position: center center;
+    border-radius: 4px;
+}
+
+.selected {
+    outline: 2px solid red;
+    outline-offset: 2px;
+}

@@ -1,0 +1,43 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wheel { position: relative; }
+
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+.centerPanel { fill: rgba(4, 4, 6, 0.74); }
+
+/* Tile: very dark tint (masked by the solid ring -> no hole) */
+.tile { fill: rgba(3, 3, 4, 0.97); }
+.tileDisabled { fill: rgba(3, 3, 4, 0.55); }
+
+/* Game grain, very subtle over the tile */
+.tileGrain {
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.hlSelect { pointer-events: none; }
+
+/* White silhouette icons */
+.icon {
+  filter: brightness(0) invert(1);
+  pointer-events: none;
+}
+.iconDisabled { opacity: 0.3; }
+
+.hit { fill: transparent; }
+
+.subDot { fill: rgba(255, 255, 255, 0.6); pointer-events: none; }
