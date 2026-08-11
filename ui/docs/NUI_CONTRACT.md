@@ -1,4 +1,4 @@
-# murphy_radialmenu — NUI Contract (for the Lua dev)
+# murphy_radialmenu NUI Contract (for the Lua dev)
 
 > **For the Lua dev.** Source of truth for this script's NUI exchanges. The frontend was built first (front-first): **the Lua backend must conform to this contract.** It is aligned 1:1 with `ui/src/data/devTestMessages.js` (test sends) and `ui/src/data/testData.js` (mocks).
 
@@ -94,7 +94,7 @@ SendNUIMessage({ action = "nui:radial:open", payload = {
 **Body received:** `{ menuId }`.
 **Lua side:** `SetNuiFocus(false, false)`.
 
-> Note: clicking a slot **with `children`** emits NO callback — the NUI opens the submenu locally (the center becomes a back button). Only selecting a leaf emits `radial:select`.
+> Note: clicking a slot **with `children`** emits NO callback: the NUI opens the submenu locally (the center becomes a back button). Only selecting a leaf emits `radial:select`.
 
 ---
 

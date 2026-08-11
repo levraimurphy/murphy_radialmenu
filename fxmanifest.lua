@@ -23,7 +23,7 @@ shared_scripts {
 client_scripts {
   -- Integrations append their slots to Config.Menus, so they must load
   -- BEFORE client/client.lua (which clones the catalog at boot). Comment a
-  -- line out — or flip its flag in Config.Integrations — to disable one.
+  -- line out (or flip its flag in Config.Integrations) to disable one.
   'integrations/_shared.lua',
   'integrations/murphy_clothing.lua',
   'integrations/murphy_doctor.lua',

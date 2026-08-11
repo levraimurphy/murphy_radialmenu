@@ -1,4 +1,4 @@
-# murphy_radialmenu — UI (frontend)
+# murphy_radialmenu UI (frontend)
 
 Adaptive in-game radial wheel: the backend (Lua) sends the slots (icon + label + action), the UI renders the wheel and reports the clicked slot. Selection follows the cursor direction (like the native RDR wheel). Stack: React + Vite.
 
@@ -22,15 +22,15 @@ npm.cmd run build  # outputs ui/build/ (served in-game by the fxmanifest)
 - Slot **labels** come from the backend (already localized on the Lua side).
 
 ## Center logo
-- `ui/public/assets/logo.png` — replace this file to change the logo shown at rest.
+- `ui/public/assets/logo.png`: replace this file to change the logo shown at rest.
 - (Also overridable via `config.logo`, or by the backend with `menu.logo`.)
 
 ## Slot icons
 - Drop PNGs in `ui/public/assets/icons/`. The backend sends only the file **name** (e.g. `"hat"`). Use silhouettes (rendered in white).
 
 ## Do NOT touch
-- `ui/build/` — generated, overwritten on every build.
-- `ui/docs/NUI_CONTRACT.md` — NUI message contract (for the Lua dev); keep it in sync with the code if you touch both.
+- `ui/build/`: generated, overwritten on every build.
+- `ui/docs/NUI_CONTRACT.md`: NUI message contract (for the Lua dev); keep it in sync with the code if you touch both.
 
 ## Dev / test without a backend
 - `npm.cmd run dev`, then the **"Dev"** button (bottom-right) or **Alt+M**: opens test wheels (2 / 4 / 6 / 8 slots, submenus, disabled slot) and a language selector, without needing Lua.

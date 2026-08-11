@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 — 2026-08-11
+## 1.0.0 (2026-08-11)
 
 First public release. 🎉
 
@@ -11,7 +11,7 @@ First public release. 🎉
   `disabled`, nested sub-menus.
 - Runtime exports: `open`, `openContext`, `close`, `isOpen`, `registerMenu`,
   `unregisterMenu`, `registerSlot`, `removeSlot`, `setContextResolver`,
-  `setLocale` — live refresh of the open wheel on catalog changes.
+  `setLocale`, with live refresh of the open wheel on catalog changes.
 - Drop-in integrations (auto-detected, per-flag toggles):
   murphy_clothing, murphy_doctor, murphy_craft.
 - Input handling: toggle mode on a control hash (default: middle mouse) or
