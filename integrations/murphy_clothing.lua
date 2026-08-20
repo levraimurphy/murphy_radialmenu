@@ -56,70 +56,120 @@ end
 local function buildClothingChildren()
   local children = {}
 
-  if hasCat('shirts_full') then
-    children[#children + 1] = {
-      id = 'sleeve', icon = 'clothing_generic_shirt', label = 'Sleeves',
-      stayOpen = true,
-      action = { type = 'export', value = { TARGET, 'ToggleSleeve' } },
-    }
-    children[#children + 1] = {
-      id = 'collar', icon = 'clothing_generic_shirt', label = 'Collar',
-      stayOpen = true,
-      action = { type = 'export', value = { TARGET, 'ToggleCollar' } },
-    }
-  end
-  if hasCat('neckwear') then
-    children[#children + 1] = {
-      id = 'bandana_up', icon = 'clothing_generic_neckerchief', label = 'Bandana',
-      stayOpen = true,
-      action = { type = 'export', value = { TARGET, 'ToggleNeckwearUp' } },
-    }
-  end
-  if hasCat('boots') then
-    children[#children + 1] = {
-      id = 'boots_under', icon = 'clothing_generic_boots', label = 'Boots',
-      stayOpen = true,
-      action = { type = 'export', value = { TARGET, 'ToggleBootsUnder' } },
-    }
-  end
-  if hasCat('vests') then
-    children[#children + 1] = {
-      id = 'vest_under', icon = 'clothing_generic_vest', label = 'Vest',
-      stayOpen = true,
-      action = { type = 'export', value = { TARGET, 'ToggleVestUnder' } },
-    }
-  end
-  if hasCat('loadouts') then
-    children[#children + 1] = {
-      id = 'loadout_side', icon = 'clothing_generic_gunbelt', label = 'Gunbelt Side',
-      stayOpen = true,
-      action = { type = 'export', value = { TARGET, 'ToggleLoadoutSide' } },
-    }
-  end
-  if hasCat('hair') then
-    children[#children + 1] = {
-      id = 'hair_pomade', icon = 'kit_shaving_kit', label = 'Pomade',
-      stayOpen = true,
-      action = { type = 'export', value = { TARGET, 'ToggleHairPomade' } },
-    }
-  end
-
   local ok, worn = pcall(function()
     return exports[TARGET]:GetWornClothingCategories()
   end)
   worn = (ok and type(worn) == 'table') and worn or {}
+  local wornSet = {}
+  for _, category in ipairs(worn) do wornSet[category] = true end
+
+  local function stateChild(id, icon, label, exportName)
+    return {
+      id = id, icon = icon, label = label, stayOpen = true,
+      action = { type = 'export', value = { TARGET, exportName } },
+    }
+  end
+  local function removalChild(category, icon)
+    return {
+      id       = category,
+      icon     = icon,
+      label    = 'Remove / Put back',
+      stayOpen = true,
+      action   = { type = 'export',
+                   value = { TARGET, 'ToggleClothingComponent' },
+                   args  = { category } },
+    }
+  end
+
+  -- Categories that carry per-item state toggles get ONE slot each, opening
+  -- a sub-wheel with their actions -- the item appears on the wheel once
+  -- instead of one entry per action.
+
+  -- Shirt: Sleeves / Collar / Remove.
+  do
+    local sub = {}
+    if hasCat('shirts_full') then
+      sub[#sub + 1] = stateChild('sleeve', 'clothing_generic_shirt', 'Sleeves', 'ToggleSleeve')
+      sub[#sub + 1] = stateChild('collar', 'clothing_generic_shirt', 'Collar', 'ToggleCollar')
+    end
+    if wornSet.shirts_full then
+      sub[#sub + 1] = removalChild('shirts_full', 'clothing_generic_shirt')
+    end
+    if #sub > 0 then
+      children[#children + 1] = { id = 'shirt', icon = 'clothing_generic_shirt', label = 'Shirt', children = sub }
+    end
+  end
+
+  -- Vest: Tuck / Remove.
+  do
+    local sub = {}
+    if hasCat('vests') then
+      sub[#sub + 1] = stateChild('vest_under', 'clothing_generic_vest', 'Tuck In / Out', 'ToggleVestUnder')
+    end
+    if wornSet.vests then
+      sub[#sub + 1] = removalChild('vests', 'clothing_generic_vest')
+    end
+    if #sub > 0 then
+      children[#children + 1] = { id = 'vest', icon = 'clothing_generic_vest', label = 'Vest', children = sub }
+    end
+  end
+
+  -- Neckwear: Raise / Remove. Bandana items live in `neckwear`, kerchiefs in
+  -- `neckerchiefs` -- the raise toggle handles both, so gate on either.
+  local neckCat = (wornSet.neckwear and 'neckwear')
+    or (wornSet.neckerchiefs and 'neckerchiefs')
+    or (wornSet.neckties and 'neckties')
+  do
+    local sub = {}
+    if hasCat('neckwear') or hasCat('neckerchiefs') then
+      sub[#sub + 1] = stateChild('bandana_up', 'clothing_generic_neckerchief', 'Raise / Lower', 'ToggleNeckwearUp')
+    end
+    if neckCat then
+      sub[#sub + 1] = removalChild(neckCat, 'clothing_generic_neckerchief')
+    end
+    if #sub > 0 then
+      children[#children + 1] = { id = 'neckwear_menu', icon = 'clothing_generic_neckerchief', label = 'Neckwear', children = sub }
+    end
+  end
+
+  -- Boots: Over-Under / Remove.
+  do
+    local sub = {}
+    if hasCat('boots') then
+      sub[#sub + 1] = stateChild('boots_under', 'clothing_generic_boots', 'Over / Under Pants', 'ToggleBootsUnder')
+    end
+    if wornSet.boots then
+      sub[#sub + 1] = removalChild('boots', 'clothing_generic_boots')
+    end
+    if #sub > 0 then
+      children[#children + 1] = { id = 'boots_menu', icon = 'clothing_generic_boots', label = 'Boots', children = sub }
+    end
+  end
+
+  if hasCat('loadouts') then
+    children[#children + 1] = stateChild('loadout_side', 'clothing_generic_gunbelt', 'Gunbelt Side', 'ToggleLoadoutSide')
+  end
+  if hasCat('hair') then
+    children[#children + 1] = stateChild('hair_pomade', 'kit_shaving_kit', 'Pomade', 'ToggleHairPomade')
+  end
+
+  -- Every other worn category keeps its flat one-touch removal toggle.
+  local grouped = { shirts_full = true, vests = true, boots = true }
+  if neckCat then grouped[neckCat] = true end
   for _, category in ipairs(worn) do
-    local entry = CATALOG[category]
-    if entry then
-      children[#children + 1] = {
-        id       = category,
-        icon     = entry.icon,
-        label    = entry.label,
-        stayOpen = true,
-        action   = { type = 'export',
-                     value = { TARGET, 'ToggleClothingComponent' },
-                     args  = { category } },
-      }
+    if not grouped[category] then
+      local entry = CATALOG[category]
+      if entry then
+        children[#children + 1] = {
+          id       = category,
+          icon     = entry.icon,
+          label    = entry.label,
+          stayOpen = true,
+          action   = { type = 'export',
+                       value = { TARGET, 'ToggleClothingComponent' },
+                       args  = { category } },
+        }
+      end
     end
   end
 
@@ -143,3 +193,15 @@ local clothingSlot = {
 -- at boot, so the two menus never share state.
 RadialIntegrations.addSlot('player', clothingSlot)
 RadialIntegrations.addSlot('horse',  clothingSlot)
+
+-- Direct-access wheel: `/radial clothing` (or a Config.DirectMenuKeys bind)
+-- opens the clothing actions as their own wheel, skipping the player wheel.
+if Config.Menus and not Config.Menus.clothing then
+  Config.Menus.clothing = {
+    title = 'Clothing',
+    slotsBuilder = function()
+      if GetResourceState(TARGET) ~= 'started' then return {} end
+      return buildClothingChildren()
+    end,
+  }
+end

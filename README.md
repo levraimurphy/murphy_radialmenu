@@ -69,6 +69,18 @@ Config.OpenControl = 0xCEE12B50   -- RDR3 control hash -> TOGGLE (press to open,
 - `OpenKey` gives the classic *hold-to-show* behavior and accepts `A`-`Z`, `0`-`9`, `F1`-`F12`, `TAB`, `SPACE`, `LSHIFT`, `LCTRL`, `LALT`, ...
 - Mouse binds can't do hold-to-show reliably: once the NUI takes focus, the game side no longer sees the mouse release. That's why `OpenControl` is a toggle by design.
 
+### Direct-open keybinds
+
+Keys that open a **specific wheel** straight away, skipping the context wheel (hold-to-show, like `Config.OpenKey`):
+
+```lua
+Config.DirectMenuKeys = {
+  clothing = 'J',   -- J opens the clothing wheel directly
+}
+```
+
+Menu ids are keys of `Config.Menus` — integrations register theirs too (murphy_clothing registers `clothing`). The same menus are also reachable with `/radial <menuId>`.
+
 ### Language
 
 ```lua

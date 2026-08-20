@@ -44,6 +44,15 @@ Config.Locale = 'en'
 Config.OpenControl = 0xCEE12B50
 -- Config.OpenKey = 'B'
 
+-- Optional keys that open a specific wheel directly, skipping the context
+-- wheel (hold-to-show, like Config.OpenKey). Menu ids are keys of
+-- Config.Menus — integrations register theirs too (e.g. murphy_clothing
+-- registers `clothing`). The same menus are also reachable with
+-- `/radial <menuId>`.
+Config.DirectMenuKeys = {
+  -- clothing = 'J',
+}
+
 -- Ragdoll keybind (single tap in / out). The /ragdoll command and wheel
 -- slots work even when the keybind is disabled.
 Config.Ragdoll = {

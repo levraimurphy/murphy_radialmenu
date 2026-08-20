@@ -78,7 +78,18 @@ end
 local function materialize(menuId)
   local menu = menus[menuId]
   if not menu then return nil end
-  local slots = resolveSlots(menu.slots)
+  local baseSlots = menu.slots
+  -- A menu can build its whole slot list at open time (`slotsBuilder`), the
+  -- menu-level counterpart of a slot's childrenBuilder. Integrations use it
+  -- to expose a sub-menu as a directly-openable wheel (`/radial clothing`).
+  if type(menu.slotsBuilder) == 'function' then
+    local ok, built = pcall(menu.slotsBuilder)
+    if not ok then
+      logError('slotsBuilder for menu %s failed: %s', tostring(menuId), tostring(built))
+    end
+    baseSlots = (ok and type(built) == 'table') and built or (menu.slots or {})
+  end
+  local slots = resolveSlots(baseSlots)
   if #slots == 0 then return nil end
   return {
     menuId = menuId,
@@ -378,6 +389,34 @@ RegisterCommand('radial', function(_, args)
   if currentMenuId then close(); return end
   open(args[1])
 end, false)
+
+-- Direct-open keybinds: Config.DirectMenuKeys maps a menu id to a key that
+-- opens that wheel straight away, skipping the context wheel. Same
+-- hold-to-show model as Config.OpenKey.
+CreateThread(function()
+  local binds = {}
+  for menuId, keyName in pairs(Config.DirectMenuKeys or {}) do
+    local vk = resolveKeyCode(keyName)
+    if vk then
+      binds[#binds + 1] = { vk = vk, menuId = menuId }
+    else
+      logError('unknown key %q in Config.DirectMenuKeys.%s, bind skipped', tostring(keyName), tostring(menuId))
+    end
+  end
+  if #binds == 0 then return end
+  while true do
+    Wait(0)
+    if not IsPauseMenuActive() then
+      for _, b in ipairs(binds) do
+        if IsRawKeyPressed(b.vk) and not currentMenuId then
+          open(b.menuId)
+        elseif IsRawKeyReleased(b.vk) and currentMenuId == b.menuId then
+          close()
+        end
+      end
+    end
+  end
+end)
 
 -- ============================================================================
 -- RAGDOLL -- single-tap toggle
